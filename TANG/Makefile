@@ -1,14 +1,19 @@
-CC := gcc-4.8
-CFLAGS := -std=c++11 $(shell pkg-config glm --cflags) $(shell pkg-config glew --cflags) $(shell pkg-config libglfw --cflags)
-LDFLAGS := -lstdc++ $(shell pkg-config glew --libs) $(shell pkg-config libglfw --libs)
+CC ?= g++
+CFLAGS := -Wall -std=c++11 $(shell pkg-config --cflags glm glew libglfw)
+LDFLAGS := $(shell pkg-config --libs glew libglfw) -lstdc++ -lXrandr
+HEADERS := $(wildcard TANG/*.h) $(wildcard TANG/*.hpp)
 SOURCES := $(wildcard TANG/*.cpp)
 OBJECTS := $(addprefix build/,$(notdir $(SOURCES:.cpp=.o)))
 EXECUTABLE := build/TANG
 
-all: $(SOURCES) $(EXECUTABLE)
+all: $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $^ -o $@
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $^ $(LDFLAGS) -o $@
 
-build/%.o: TANG/%.cpp
+build/%.o: TANG/%.cpp $(HEADERS)
 	$(CC) $(CFLAGS) $< -c -o $@
+
+.PHONY: clean
+clean:
+	rm -f $(EXECUTABLE) $(OBJECTS)
