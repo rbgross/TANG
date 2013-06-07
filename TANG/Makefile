@@ -1,6 +1,6 @@
 CC ?= g++
 CFLAGS := -Wall -std=c++11 $(shell pkg-config --cflags glm glew libglfw)
-LDFLAGS := $(shell pkg-config --libs glew libglfw) -lstdc++ -lXrandr
+LDFLAGS := $(shell pkg-config --libs glew libglfw) -lGL -lstdc++ -lm
 HEADERS := $(wildcard TANG/*.h) $(wildcard TANG/*.hpp)
 SOURCES := $(wildcard TANG/*.cpp)
 OBJECTS := $(addprefix build/,$(notdir $(SOURCES:.cpp=.o)))
